@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textarea Content Formatter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            max-width: 600px;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            resize: vertical;
+            font-size: 16px;
+            background-color: #fff;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        #output {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            white-space: pre-wrap; /* Preserve whitespace formatting */
+            word-wrap: break-word; /* Break long words */
+            font-size: 16px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Textarea Content Formatter</h1>
+        <textarea id="inputText" placeholder="Paste your text here..."></textarea>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        function formatText() {
+            // Get the content of the textarea
+            const text = document.getElementById('inputText').value;
+
+            // Split the content into paragraphs
+            const paragraphs = text.split('\n').filter(para => para.trim() !== '');
+
+            // Prepare the output with line breaks and indentation
+            let formattedText = '[\n';
+            paragraphs.forEach((para, index) => {
+                // Replace any double quotes within the text with single quotes
+                const sanitizedPara = para.trim().replace(/"/g, "'");
+                formattedText += `    "${sanitizedPara}"`;
+                if (index < paragraphs.length - 1) {
+                    formattedText += ',\n';
+                } else {
+                    formattedText += '\n';
+                }
+            });
+            formattedText += '],';
+
+            // Display the formatted content in the output div
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerText = formattedText;
+
+            // Automatically copy the formatted text to the clipboard
+            navigator.clipboard.writeText(formattedText).then(() => {
+                // Optional: Log success message to the console
+                console.log('Formatted text copied to clipboard.');
+            }).catch(err => {
+                // Optional: Log error to the console
+                console.error('Failed to copy text: ', err);
+            });
+        }
+
+        // Automatically format text when textarea content changes
+        document.getElementById('inputText').addEventListener('input', formatText);
+    </script>
+
+</body>
+</html>
